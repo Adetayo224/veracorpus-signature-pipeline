@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+processed/
+logs/
+.env
+
+# Large binary media — hosted separately (Google Drive)
+Signature documents/
+Guide video/
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.mov

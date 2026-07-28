@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Signature Review</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>VeraCorpus Signature Review</h1>
+</header>
+<main>
+  <h2>Processed PDFs</h2>
+  {% if not summaries %}
+    <p class="empty">No processed PDFs yet. Run:
+      <code>python main.py --input "Signature documents/signatures_part01_p0001-0060.pdf"</code>
+    </p>
+  {% else %}
+  <table class="pdfs">
+    <thead>
+      <tr>
+        <th>PDF</th><th>Total</th><th>Pending</th>
+        <th>Accepted</th><th>Edited</th><th>Pushed</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for s in summaries %}
+      <tr>
+        <td><a href="/pdf/{{ s.name }}">{{ s.name }}</a></td>
+        <td>{{ s.total }}</td>
+        <td class="pending">{{ s.pending }}</td>
+        <td class="accepted">{{ s.accepted }}</td>
+        <td class="edited">{{ s.edited }}</td>
+        <td>{{ s.pushed }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <button id="push-btn" class="primary">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round"
+         stroke-linejoin="round">
+      <path d="M12 3v12M6 9l6-6 6 6M4 21h16"/>
+    </svg>
+    Push to Database
+  </button>
+  <div id="push-status"></div>
+  {% endif %}
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

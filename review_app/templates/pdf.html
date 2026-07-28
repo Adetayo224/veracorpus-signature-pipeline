@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ pdf_name }} — Signature Review</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
+</head>
+<body>
+<header>
+  <h1><a href="/">←</a> {{ pdf_name }}</h1>
+</header>
+<main>
+  {% if not entries %}
+    <p class="empty">No entries were detected for this PDF.</p>
+  {% endif %}
+
+  {% for e in entries %}
+  <article class="entry" data-id="{{ e.id }}" data-page="{{ e.page_number }}">
+    <div class="crop">
+      <img src="/processed/{{ pdf_name }}/crops/{{ e.id }}.png?t={{ e.created_at }}"
+           alt="signature crop">
+      <p class="page-num">page {{ e.page_number }}</p>
+    </div>
+    <div class="meta">
+      <label>Artist
+        <input name="artist_name_claimed"
+               value="{{ e.artist_name_claimed or '' }}">
+      </label>
+      <label>Dates
+        <input name="dates" value="{{ e.dates or '' }}">
+      </label>
+      <label>Title
+        <input name="title" value="{{ e.title or '' }}">
+      </label>
+      <details>
+        <summary>Raw OCR text</summary>
+        <pre>{{ e.raw_ocr_text or '' }}</pre>
+      </details>
+      <p class="status">Status:
+        <span class="status-val">{{ e.review_status }}</span>
+      </p>
+      <div class="actions">
+        <button class="accept">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+          Accept
+        </button>
+        <button class="edit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+          </svg>
+          Edit crop
+        </button>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</main>
+
+<dialog id="crop-dialog">
+  <div class="dialog-body">
+    <div class="cropper-wrap"><img id="crop-target" alt=""></div>
+    <div class="dialog-actions">
+      <button id="crop-cancel">Cancel</button>
+      <button id="crop-save" class="primary">Save crop</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
+<script>window.PDF_NAME = {{ pdf_name | tojson }};</script>
+<script src="/static/app.js"></script>
+</body>
+</html>
